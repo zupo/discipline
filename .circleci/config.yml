@@ -1,0 +1,56 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2
+
+jobs:
+
+  build:
+    working_directory: ~/repo
+    environment:
+      PGHOST: localhost
+      PIPENV_VENV_IN_PROJECT: 1
+      PIPENV_IGNORE_VIRTUALENVS: 1
+    docker:
+      - image: circleci/python:3.7.4-node
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Pipfile.lock" }}
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install --dev --deploy
+
+      - save_cache:
+          paths:
+            - ./.venv
+          key: v1-dependencies-{{ checksum "Pipfile.lock" }}
+
+      - run:
+          name: Step 1
+          command: |
+            pipenv run pytest --cov=step1 --cov-branch --cov-fail-under=100 --cov-report html step1.py
+
+      - run:
+          name: Step 2
+          command: |
+            pipenv run pytest --cov=step2 --cov-branch --cov-fail-under=100 --cov-report html step2.py
+
+      - run:
+          name: Step 3
+          command: |
+            pipenv run pytest --cov=step3 --cov-branch --cov-fail-under=100 --cov-report html step3.py
+            pipenv run mypy step3.py
+
+      - run:
+          name: Step 4
+          command: |
+            pipenv run pytest --cov=step4 --cov-branch --cov-fail-under=100 --cov-report html step4.py
