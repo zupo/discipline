@@ -121,6 +121,16 @@ jobs:
             pipenv run pytest --cov=step6 --cov-branch --cov-fail-under=100 --cov-report html step6.py
             pipenv run mypy step6.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step6 import luke
+            import json
+            print(json.dumps(luke.json))
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker"}' | diff output.txt -
+
       - run:
           name: Step 7
           command: |
