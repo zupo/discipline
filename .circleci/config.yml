@@ -242,3 +242,10 @@ jobs:
           command: |
             pipenv run pytest --cov=step14 --cov-branch --cov-fail-under=100 --cov-report html step14.py
             pipenv run mypy --strict step14.py
+
+
+      - run:
+          name: Step 15
+          command: |
+            pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
+            pipenv run mypy --strict step15.py
