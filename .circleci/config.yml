@@ -50,7 +50,7 @@ jobs:
             echo "[Padme Amidala, Anakin Skywalker, None, None]
             Traceback (most recent call last):
               File \"<stdin>\", line 4, in <module>
-              File \"/home/circleci/repo/step1.py\", line 16, in grandparents
+              File \"/home/circleci/repo/step1.py\", line 13, in grandparents
                 grandparents.append(self.mother.mother)
             AttributeError: 'NoneType' object has no attribute 'mother'" | diff output.txt -
 
@@ -63,10 +63,10 @@ jobs:
             pipenv run mypy step2.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step2.py:23: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            echo 'step2.py:21: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            step2.py:22: error: Item "None" of "Optional[Person]" has no attribute "father"
+            step2.py:23: error: Item "None" of "Optional[Person]" has no attribute "mother"
             step2.py:24: error: Item "None" of "Optional[Person]" has no attribute "father"
-            step2.py:25: error: Item "None" of "Optional[Person]" has no attribute "mother"
-            step2.py:26: error: Item "None" of "Optional[Person]" has no attribute "father"
             Found 4 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
@@ -204,7 +204,7 @@ jobs:
             pipenv run mypy step11.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step11.py:26: error: Item "None" of "Optional[Person]" has no attribute "name"
+            echo 'step11.py:25: error: Item "None" of "Optional[Person]" has no attribute "name"
             Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:

@@ -1,6 +1,3 @@
-### Model ###
-
-
 class Person:
     def __init__(self, name, mother=None, father=None):
         self.name = name
@@ -20,8 +17,6 @@ class Person:
         return grandparents
 
 
-### Data ###
-
 jobal = Person("Jobal Naberrie")
 ruwee = Person("Ruwee Naberrie")
 padme = Person("Padme Amidala", mother=jobal, father=ruwee)
@@ -35,9 +30,6 @@ leia = Person("Leia Organa", mother=padme, father=anakin)
 
 han = Person("Han Solo")
 kylo = Person("Kylo Ren", mother=leia, father=han)
-
-
-### Tests ###
 
 
 def test_person():
