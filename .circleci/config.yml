@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Step 1
           command: |
-            pipenv run pytest --cov=step1 --cov-branch --cov-fail-under=100 --cov-report html step1.py
+            pipenv run pytest --cov-report html --cov=step1 step1.py
 
             echo "Running scenario code ..."
             echo "
@@ -57,7 +57,7 @@ jobs:
       - run:
           name: Step 2
           command: |
-            pipenv run pytest --cov=step2 --cov-branch --cov-fail-under=100 --cov-report html step2.py
+            pipenv run pytest --cov-report html --cov=step2 step2.py
 
             echo "Running scenario code ..."
             pipenv run mypy step2.py &> output.txt || true
@@ -72,7 +72,7 @@ jobs:
       - run:
           name: Step 3
           command: |
-            pipenv run pytest --cov=step3 --cov-branch --cov-fail-under=100 --cov-report html step3.py
+            pipenv run pytest --cov-report html --cov=step3 step3.py
             pipenv run mypy step3.py
 
             echo "Running scenario code ..."
@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Step 4
           command: |
-            pipenv run pytest --cov=step4 --cov-branch --cov-fail-under=100 --cov-report html step4.py
+            pipenv run pytest --cov-report html --cov=step4 step4.py
 
             echo "Running scenario code ..."
             pipenv run mypy step4.py &> output.txt || true
@@ -101,7 +101,7 @@ jobs:
       - run:
           name: Step 5
           command: |
-            pipenv run pytest --cov=step5 --cov-branch --cov-fail-under=100 --cov-report html step5.py
+            pipenv run pytest --cov-report html --cov=step5 step5.py
             pipenv run mypy step5.py
 
             echo "Running scenario code ..."
@@ -118,7 +118,7 @@ jobs:
       - run:
           name: Step 6
           command: |
-            pipenv run pytest --cov=step6 --cov-branch --cov-fail-under=100 --cov-report html step6.py
+            pipenv run pytest --cov-report html --cov=step6 step6.py
             pipenv run mypy step6.py
 
             echo "Running scenario code ..."
@@ -134,7 +134,7 @@ jobs:
       - run:
           name: Step 7
           command: |
-            pipenv run pytest --cov=step7 --cov-branch --cov-fail-under=100 --cov-report html step7.py
+            pipenv run pytest --cov-report html --cov=step7 step7.py
             pipenv run mypy step7.py
 
             echo "Running scenario code ..."
@@ -151,7 +151,7 @@ jobs:
       - run:
           name: Step 8
           command: |
-            pipenv run pytest --cov=step8 --cov-branch --cov-fail-under=100 --cov-report html step8.py
+            pipenv run pytest --cov-report html --cov=step8 step8.py
             echo "Running scenario code ..."
             pipenv run mypy step8.py &> output.txt || true
 
@@ -163,7 +163,7 @@ jobs:
       - run:
           name: Step 9
           command: |
-            pipenv run pytest --cov=step9 --cov-branch --cov-fail-under=100 --cov-report html step9.py
+            pipenv run pytest --cov-report html --cov=step9 step9.py
             pipenv run mypy step9.py
 
             echo "Running scenario code ..."
@@ -179,7 +179,7 @@ jobs:
       - run:
           name: Step 10
           command: |
-            pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
+            pipenv run pytest --cov-report html --cov=step10 step10.py
 
             echo "Running scenario code ..."
             echo "
@@ -198,7 +198,7 @@ jobs:
       - run:
           name: Step 11
           command: |
-            pipenv run pytest --cov=step11 --cov-branch --cov-fail-under=100 --cov-report html step11.py
+            pipenv run pytest --cov-report html --cov=step11 step11.py
 
             echo "Running scenario code ..."
             pipenv run mypy step11.py &> output.txt || true
@@ -210,7 +210,7 @@ jobs:
       - run:
           name: Step 12
           command: |
-            pipenv run pytest --cov=step12 --cov-branch --cov-fail-under=100 --cov-report html step12.py
+            pipenv run pytest --cov-report html --cov=step12 step12.py
             pipenv run mypy step12.py
 
             echo "Running scenario code ..."
@@ -228,7 +228,7 @@ jobs:
       - run:
           name: Step 13
           command: |
-            pipenv run pytest --cov=step13 --cov-branch --cov-fail-under=100 --cov-report html step13.py
+            pipenv run pytest --cov-report html --cov=step13 step13.py
 
             echo "Running scenario code ..."
             pipenv run mypy --strict step13.py &> output.txt || true
@@ -240,14 +240,14 @@ jobs:
       - run:
           name: Step 14
           command: |
-            pipenv run pytest --cov=step14 --cov-branch --cov-fail-under=100 --cov-report html step14.py
+            pipenv run pytest --cov-report html --cov=step14 step14.py
             pipenv run mypy --strict step14.py
 
 
       - run:
           name: Step 15
           command: |
-            pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
+            pipenv run pytest --cov-report html --cov=step15 step15.py
             pipenv run mypy --strict step15.py
 
       - run:
