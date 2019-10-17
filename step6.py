@@ -1,6 +1,7 @@
 ### Model ###
 from __future__ import annotations
 
+import json
 import typing as t
 
 
@@ -18,11 +19,7 @@ class Person:
 
     @property
     def json(self):
-        return {
-            "name": self.name,
-            "mother": self.mother.name,
-            "father": self.father.name,
-        }
+        return {"name": self.name}
 
     @property
     def grandparents(self: Person) -> t.List[Person]:
@@ -63,11 +60,7 @@ def test_person():
 
 
 def test_json():
-    assert luke.json == {
-        "father": "Anakin Skywalker",
-        "mother": "Padme Amidala",
-        "name": "Luke Skywalker",
-    }
+    assert json.dumps(han.json) == '{"name": "Han Solo"}'
 
 
 def test_grandparents():
@@ -81,6 +74,7 @@ $ pipenv run mypy step6.py
 $ pipenv run pytest --cov=step6 --cov-branch --cov-fail-under=100 --cov-report html step6.py
 $ open htmlcov/index.html
 $ pipenv run python
->>> from step6 import kylo, han
->>> han.json
+>>> from step6 import luke
+>>> import json
+>>> json.dumps(luke.json)
 """

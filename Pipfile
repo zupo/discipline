@@ -8,6 +8,8 @@ mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 coverage = "*"
+typecov = "*"
+lxml = "*"
 
 [dev-packages]
 

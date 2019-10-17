@@ -10,3 +10,4 @@ TODO
 * [ ] dataclasses?
 * [ ] grandchildren?
 * [ ] same-sex parents?
+* [ ] --pretty

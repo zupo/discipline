@@ -1,6 +1,7 @@
 ### Model ###
 from __future__ import annotations
 
+import json
 import typing as t
 
 
@@ -17,12 +18,11 @@ class Person:
         return self.name
 
     @property
-    def json(self: Person):
+    def json(self) -> t.Dict[str, t.Optional[str]]:
         return {
             "name": self.name,
             "mother": self.mother.name if self.mother else None,
             "father": self.father.name if self.father else None,
-            "maternal_grandmother": self.mother.mother.name if self.mother else None,
         }
 
     @property
@@ -64,25 +64,24 @@ def test_person():
 
 
 def test_json():
-    assert luke.json == {
-        "father": "Anakin Skywalker",
-        "mother": "Padme Amidala",
-        "name": "Luke Skywalker",
-        "maternal_grandmother": "Jobal Naberrie",
-    }
+    assert (
+        json.dumps(han.json) == '{"name": "Han Solo", "mother": null, "father": null}'
+    )
 
 
 def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
-    assert kylo.grandparents == [padme, anakin]
+    assert kylo.grandparents == [padme]
 
 
 """ Scenario:
+$ pipenv run mypy step9.py
 $ pipenv run pytest --cov=step9 --cov-branch --cov-fail-under=100 --cov-report html step9.py
 $ open htmlcov/index.html
 $ pipenv run python
->>> from step9 import anakin
->>> anakin.json
-$ pipenv run mypy step9.py
+>>> from step9 import luke, anakin
+>>> import json
+>>> json.dumps(luke.json)
+>>> TODO: remove the force then this: json.dumps(anakin.json)
 """

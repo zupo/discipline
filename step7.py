@@ -1,6 +1,7 @@
 ### Model ###
 from __future__ import annotations
 
+import json
 import typing as t
 
 
@@ -17,12 +18,8 @@ class Person:
         return self.name
 
     @property
-    def json(self: Person):
-        return {
-            "name": self.name,
-            "mother": self.mother.name,
-            "father": self.father.name,
-        }
+    def json(self):
+        return {"name": self.name, "mother": self.mother, "father": self.father}
 
     @property
     def grandparents(self: Person) -> t.List[Person]:
@@ -63,11 +60,9 @@ def test_person():
 
 
 def test_json():
-    assert luke.json == {
-        "father": "Anakin Skywalker",
-        "mother": "Padme Amidala",
-        "name": "Luke Skywalker",
-    }
+    assert (
+        json.dumps(han.json) == '{"name": "Han Solo", "mother": null, "father": null}'
+    )
 
 
 def test_grandparents():
@@ -78,4 +73,10 @@ def test_grandparents():
 
 """ Scenario:
 $ pipenv run mypy step7.py
+$ pipenv run pytest --cov=step7 --cov-branch --cov-fail-under=100 --cov-report html step7.py
+$ open htmlcov/index.html
+$ pipenv run python
+>>> from step7 import luke
+>>> import json
+>>> json.dumps(luke.json)
 """

@@ -51,7 +51,7 @@ def test_grandparents():
 
 
 """ Scenario:
-$ pipenv run pytest --cov=step1 --cov-branch --cov-fail-under=100 --cov-report html step1.py
+$ pipenv run pytest --cov=step1 --cov-report html --cov-branch step1.py
 $ open htmlcov/index.html
 $ pipenv run python
 >>> from step1 import kylo, han

@@ -23,7 +23,9 @@ class Person:
             "name": self.name,
             "mother": self.mother.name if self.mother else None,
             "father": self.father.name if self.father else None,
-            "maternal_grandmother": self.mother.mother.name if self.mother else None,
+            "maternal_grandmother": self.mother.mother.name
+            if self.mother and self.mother.mother
+            else None,
         }
 
     @property
@@ -82,10 +84,11 @@ def test_grandparents():
 
 
 """ Scenario:
-$ pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
+$ pipenv run pytest --cov=step12 --cov-branch --cov-fail-under=100 --cov-report html step12.py
+$ pipenv run mypy step12.py
 $ open htmlcov/index.html
 $ pipenv run python
->>> from step10 import luke, anakin
+>>> from step12 import luke, anakin
 >>> import json
 >>> json.dumps(luke.json)
 >>> json.dumps(anakin.json)

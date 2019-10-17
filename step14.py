@@ -9,21 +9,28 @@ class Person:
     mother: t.Optional[Person]
     father: t.Optional[Person]
 
-    def __init__(self, name, mother=None, father=None):
+    def __init__(
+        self,
+        name: str,
+        mother: t.Optional[Person] = None,
+        father: t.Optional[Person] = None,
+    ) -> None:
         self.name = name
         self.mother = mother
         self.father = father
 
-    def __repr__(self):
+    def __repr__(self: Person) -> str:
         return self.name
 
     @property
-    def json(self) -> t.Dict[str, t.Optional[str]]:
+    def json(self: Person) -> t.Dict[str, t.Optional[str]]:
         return {
             "name": self.name,
             "mother": self.mother.name if self.mother else None,
             "father": self.father.name if self.father else None,
-            "maternal_grandmother": self.mother.mother.name if self.mother else None,
+            "maternal_grandmother": self.mother.mother.name
+            if self.mother and self.mother.mother
+            else None,
         }
 
     @property
@@ -82,11 +89,7 @@ def test_grandparents():
 
 
 """ Scenario:
-$ pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
-$ open htmlcov/index.html
-$ pipenv run python
->>> from step10 import luke, anakin
->>> import json
->>> json.dumps(luke.json)
->>> json.dumps(anakin.json)
+$ pipenv run mypy step14.py --linecount-report=typecov
+$ pipenv run typecov 100 typecov/linecount.txt
+$ pipenv run mypy step14.py --linecount-report=typecov --html-report=htmltypecov
 """
