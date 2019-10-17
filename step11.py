@@ -82,11 +82,5 @@ def test_grandparents():
 
 
 """ Scenario:
-$ pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
-$ open htmlcov/index.html
-$ pipenv run python
->>> from step10 import luke, anakin
->>> import json
->>> json.dumps(luke.json)
->>> json.dumps(anakin.json)
+$ pipenv run mypy step11.py
 """

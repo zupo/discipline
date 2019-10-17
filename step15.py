@@ -1,24 +1,20 @@
 ### Model ###
 from __future__ import annotations
+from dataclasses import dataclass
+from dataclasses import field
 
 import json
 import typing as t
 
 
+@dataclass
 class Person:
-    mother: t.Optional[Person]
-    father: t.Optional[Person]
-
-    def __init__(self, name, mother=None, father=None):
-        self.name = name
-        self.mother = mother
-        self.father = father
-
-    def __repr__(self):
-        return self.name
+    name: str
+    mother: t.Optional[Person] = None
+    father: t.Optional[Person] = None
 
     @property
-    def json(self) -> t.Dict[str, t.Optional[str]]:
+    def json(self: Person) -> t.Dict[str, t.Optional[str]]:
         return {
             "name": self.name,
             "mother": self.mother.name if self.mother else None,
@@ -60,13 +56,7 @@ kylo = Person("Kylo Ren", mother=leia, father=han)
 ### Tests ###
 
 
-def test_person():
-    foo = Person("foo")
-    assert f"{foo}" == "foo"
-    assert foo.name == "foo"
-
-
-def test_json():
+def test_json() -> None:
     assert (
         json.dumps(han.json)
         == '{"name": "Han Solo", "mother": null, "father": null, "maternal_grandmother": null}'
@@ -77,12 +67,17 @@ def test_json():
     )
 
 
-def test_grandparents():
+def test_grandparents() -> None:
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
     assert kylo.grandparents == [padme, anakin]
 
 
 """ Scenario:
-$ pipenv run mypy step13.py --strict
+$ pipenv run mypy step15.py --strict
+$ pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
+$ pipenv run python
+>>> from step15 import luke
+>>> import json
+>>> json.dumps(luke.json)
 """

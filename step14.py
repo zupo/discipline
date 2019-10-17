@@ -65,13 +65,13 @@ kylo = Person("Kylo Ren", mother=leia, father=han)
 ### Tests ###
 
 
-def test_person():
+def test_person() -> None:
     foo = Person("foo")
     assert f"{foo}" == "foo"
     assert foo.name == "foo"
 
 
-def test_json():
+def test_json() -> None:
     assert (
         json.dumps(han.json)
         == '{"name": "Han Solo", "mother": null, "father": null, "maternal_grandmother": null}'
@@ -82,14 +82,12 @@ def test_json():
     )
 
 
-def test_grandparents():
+def test_grandparents() -> None:
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
     assert kylo.grandparents == [padme, anakin]
 
 
 """ Scenario:
-$ pipenv run mypy step14.py --linecount-report=typecov
-$ pipenv run typecov 100 typecov/linecount.txt
-$ pipenv run mypy step14.py --linecount-report=typecov --html-report=htmltypecov
+$ pipenv run mypy step14.py --strict
 """
