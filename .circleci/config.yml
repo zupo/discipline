@@ -148,12 +148,17 @@ jobs:
             echo "Asserting scenario output ..."
             echo "TypeError: Object of type Person is not JSON serializable" | diff output.txt.tail -
 
-
       - run:
           name: Step 8
           command: |
             pipenv run pytest --cov=step8 --cov-branch --cov-fail-under=100 --cov-report html step8.py
-            pipenv run mypy step8.py
+            echo "Running scenario code ..."
+            pipenv run mypy step8.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step8.py:22: error: Dict entry 1 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            step8.py:22: error: Dict entry 2 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            Found 2 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 9
