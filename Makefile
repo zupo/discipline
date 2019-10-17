@@ -19,8 +19,7 @@ install:
 
 .PHONY: format
 format: .installed
-	@pipenv run black step*.py
-
+	@pipenv run black --line-length 62 step*.py
 
 .PHONY: tests
 tests: .installed

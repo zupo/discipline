@@ -16,11 +16,17 @@ class Person:
     def json(self: Person) -> t.Dict[str, t.Optional[str]]:
         return {
             "name": self.name,
-            "mother": self.mother.name if self.mother else None,
-            "father": self.father.name if self.father else None,
-            "maternal_grandmother": self.mother.mother.name
-            if self.mother and self.mother.mother
-            else None,
+            "mother": (
+                self.mother.name if self.mother else None
+            ),
+            "father": (
+                self.father.name if self.father else None
+            ),
+            "maternal_grandmother": (
+                self.mother.mother.name
+                if self.mother and self.mother.mother
+                else None
+            ),
         }
 
     @property
@@ -32,7 +38,11 @@ class Person:
         if self.father:
             grandparents.append(self.father.mother)
             grandparents.append(self.father.father)
-        return [person for person in grandparents if person is not None]
+        return [
+            person
+            for person in grandparents
+            if person is not None
+        ]
 
 
 jobal = Person("Jobal Naberrie")
@@ -52,12 +62,21 @@ kylo = Person("Kylo Ren", mother=leia, father=han)
 
 def test_json() -> None:
     assert (
-        json.dumps(han.json)
-        == '{"name": "Han Solo", "mother": null, "father": null, "maternal_grandmother": null}'
+        json.dumps(han.json) == "{"
+        '"name": "Han Solo", '
+        '"mother": null, '
+        '"father": null, '
+        '"maternal_grandmother": null'
+        "}"
     )
+
     assert (
-        json.dumps(luke.json)
-        == '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}'
+        json.dumps(luke.json) == "{"
+        '"name": "Luke Skywalker", '
+        '"mother": "Padme Amidala", '
+        '"father": "Anakin Skywalker", '
+        '"maternal_grandmother": "Jobal Naberrie"'
+        "}"
     )
 
 

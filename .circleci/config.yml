@@ -28,6 +28,7 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv install --dev --deploy
+            touch .installed
 
       - save_cache:
           paths:
@@ -95,7 +96,7 @@ jobs:
             pipenv run mypy step4.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step4.py:27: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
+            echo 'step4.py:26: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
             Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
@@ -156,8 +157,8 @@ jobs:
             pipenv run mypy step8.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step8.py:22: error: Dict entry 1 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
-            step8.py:22: error: Dict entry 2 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            echo 'step8.py:23: error: Dict entry 1 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            step8.py:24: error: Dict entry 2 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
             Found 2 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
@@ -204,7 +205,7 @@ jobs:
             pipenv run mypy step11.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step11.py:25: error: Item "None" of "Optional[Person]" has no attribute "name"
+            echo 'step11.py:31: error: Item "None" of "Optional[Person]" has no attribute "name"
             Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
@@ -252,4 +253,4 @@ jobs:
 
       - run:
           name: Run Black on all files
-          command: pipenv run black step*.py --check
+          command: make format

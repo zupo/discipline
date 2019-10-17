@@ -24,7 +24,11 @@ class Person:
         if self.father:
             grandparents.append(self.father.mother)
             grandparents.append(self.father.father)
-        return [person for person in grandparents if person is not None]
+        return [
+            person
+            for person in grandparents
+            if person is not None
+        ]
 
 
 jobal = Person("Jobal Naberrie")

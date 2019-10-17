@@ -18,7 +18,11 @@ class Person:
 
     @property
     def json(self):
-        return {"name": self.name, "mother": self.mother, "father": self.father}
+        return {
+            "name": self.name,
+            "mother": self.mother,
+            "father": self.father,
+        }
 
     @property
     def grandparents(self: Person) -> t.List[Person]:
@@ -29,7 +33,11 @@ class Person:
         if self.father:
             grandparents.append(self.father.mother)
             grandparents.append(self.father.father)
-        return [person for person in grandparents if person is not None]
+        return [
+            person
+            for person in grandparents
+            if person is not None
+        ]
 
 
 jobal = Person("Jobal Naberrie")
@@ -55,7 +63,8 @@ def test_person():
 
 def test_json():
     assert (
-        json.dumps(han.json) == '{"name": "Han Solo", "mother": null, "father": null}'
+        json.dumps(han.json)
+        == '{"name": "Han Solo", "mother": null, "father": null}'
     )
 
 

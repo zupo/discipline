@@ -4,12 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+black = "==19.3b0"
+coverage = "*"
+lxml = "*"
 mypy = "*"
 pytest = "*"
 pytest-cov = "*"
-coverage = "*"
 typecov = "*"
-lxml = "*"
 
 [dev-packages]
 
