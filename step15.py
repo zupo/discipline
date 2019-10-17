@@ -76,8 +76,4 @@ def test_grandparents() -> None:
 """ Scenario:
 $ pipenv run mypy step15.py --strict
 $ pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
-$ pipenv run python
->>> from step15 import luke
->>> import json
->>> json.dumps(luke.json)
 """
