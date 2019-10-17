@@ -135,6 +135,19 @@ jobs:
           name: Step 7
           command: |
             pipenv run pytest --cov=step7 --cov-branch --cov-fail-under=100 --cov-report html step7.py
+            pipenv run mypy step7.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step7 import luke
+            import json
+            print(json.dumps(luke.json))
+            " | pipenv run python &> output.txt || true
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo "TypeError: Object of type Person is not JSON serializable" | diff output.txt.tail -
+
 
       - run:
           name: Step 8
