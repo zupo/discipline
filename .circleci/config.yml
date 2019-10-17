@@ -249,3 +249,7 @@ jobs:
           command: |
             pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
             pipenv run mypy --strict step15.py
+
+      - run:
+          name: Run Black on all files
+          command: pipenv run black step*.py --check
