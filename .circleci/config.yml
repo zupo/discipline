@@ -78,13 +78,13 @@ jobs:
             echo "Running scenario code ..."
             echo "
             from step3 import kylo, han
-            print(kylo.grandparents)
             print(han.grandparents)
+            print(kylo.grandparents)
             " | pipenv run python &> output.txt
 
             echo "Asserting scenario output ..."
-            echo "[Padme Amidala, Anakin Skywalker, None, None]
-            []" | diff output.txt -
+            echo "[]
+            [Padme Amidala, Anakin Skywalker, None, None]" | diff output.txt -
 
       - run:
           name: Step 4
@@ -103,6 +103,17 @@ jobs:
           command: |
             pipenv run pytest --cov=step5 --cov-branch --cov-fail-under=100 --cov-report html step5.py
             pipenv run mypy step5.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step5 import kylo, han
+            print(han.grandparents)
+            print(kylo.grandparents)
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo "[]
+            [Padme Amidala, Anakin Skywalker]" | diff output.txt -
 
       - run:
           name: Step 6
