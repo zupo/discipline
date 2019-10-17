@@ -206,3 +206,21 @@ jobs:
             echo "Asserting scenario output ..."
             echo 'step11.py:26: error: Item "None" of "Optional[Person]" has no attribute "name"
             Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
+
+      - run:
+          name: Step 12
+          command: |
+            pipenv run pytest --cov=step12 --cov-branch --cov-fail-under=100 --cov-report html step12.py
+            pipenv run mypy step12.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step12 import luke, anakin
+            import json
+            print(json.dumps(luke.json))
+            print(json.dumps(anakin.json))
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}
+            {"name": "Anakin Skywalker", "mother": "Shmi Skywalker Lars", "father": "The Force", "maternal_grandmother": null}' | diff output.txt -
