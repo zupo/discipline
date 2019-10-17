@@ -75,6 +75,10 @@ def test_json():
         json.dumps(luke.json)
         == '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}'
     )
+    assert (
+        json.dumps(anakin.json)
+        == '{"name": "Anakin Skywalker", "mother": "Shmi Skywalker Lars", "father": "The Force", "maternal_grandmother": null}'
+    )
 
 
 def test_grandparents():

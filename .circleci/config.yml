@@ -39,10 +39,35 @@ jobs:
           command: |
             pipenv run pytest --cov=step1 --cov-branch --cov-fail-under=100 --cov-report html step1.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step1 import kylo, han
+            print(kylo.grandparents)
+            print(han.grandparents)
+            " | pipenv run python &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo "[Padme Amidala, Anakin Skywalker, None, None]
+            Traceback (most recent call last):
+              File \"<stdin>\", line 4, in <module>
+              File \"/home/circleci/repo/step1.py\", line 16, in grandparents
+                grandparents.append(self.mother.mother)
+            AttributeError: 'NoneType' object has no attribute 'mother'" | diff output.txt -
+
       - run:
           name: Step 2
           command: |
             pipenv run pytest --cov=step2 --cov-branch --cov-fail-under=100 --cov-report html step2.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy step2.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step2.py:23: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            step2.py:24: error: Item "None" of "Optional[Person]" has no attribute "father"
+            step2.py:25: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            step2.py:26: error: Item "None" of "Optional[Person]" has no attribute "father"
+            Found 4 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 3
@@ -50,10 +75,28 @@ jobs:
             pipenv run pytest --cov=step3 --cov-branch --cov-fail-under=100 --cov-report html step3.py
             pipenv run mypy step3.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step3 import kylo, han
+            print(han.grandparents)
+            print(kylo.grandparents)
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo "[]
+            [Padme Amidala, Anakin Skywalker, None, None]" | diff output.txt -
+
       - run:
           name: Step 4
           command: |
             pipenv run pytest --cov=step4 --cov-branch --cov-fail-under=100 --cov-report html step4.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy step4.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step4.py:27: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
+            Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 5
@@ -61,30 +104,148 @@ jobs:
             pipenv run pytest --cov=step5 --cov-branch --cov-fail-under=100 --cov-report html step5.py
             pipenv run mypy step5.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step5 import kylo, han
+            print(han.grandparents)
+            print(kylo.grandparents)
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo "[]
+            [Padme Amidala, Anakin Skywalker]" | diff output.txt -
+
       - run:
           name: Step 6
           command: |
             pipenv run pytest --cov=step6 --cov-branch --cov-fail-under=100 --cov-report html step6.py
             pipenv run mypy step6.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step6 import luke
+            import json
+            print(json.dumps(luke.json))
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker"}' | diff output.txt -
+
       - run:
           name: Step 7
           command: |
             pipenv run pytest --cov=step7 --cov-branch --cov-fail-under=100 --cov-report html step7.py
+            pipenv run mypy step7.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step7 import luke
+            import json
+            print(json.dumps(luke.json))
+            " | pipenv run python &> output.txt || true
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo "TypeError: Object of type Person is not JSON serializable" | diff output.txt.tail -
 
       - run:
           name: Step 8
           command: |
             pipenv run pytest --cov=step8 --cov-branch --cov-fail-under=100 --cov-report html step8.py
-            pipenv run mypy step8.py
+            echo "Running scenario code ..."
+            pipenv run mypy step8.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step8.py:22: error: Dict entry 1 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            step8.py:22: error: Dict entry 2 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
+            Found 2 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 9
           command: |
             pipenv run pytest --cov=step9 --cov-branch --cov-fail-under=100 --cov-report html step9.py
+            pipenv run mypy step9.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step9 import luke
+            import json
+            print(json.dumps(luke.json))
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker"}' | diff output.txt -
 
       - run:
           name: Step 10
           command: |
             pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
-            pipenv run mypy step10.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step10 import luke, anakin
+            import json
+            print(json.dumps(luke.json))
+            print(json.dumps(anakin.json))
+            " | pipenv run python &> output.txt || true
+            head -n 1 output.txt > output.txt.head
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}' | diff output.txt.head -
+            echo "AttributeError: 'NoneType' object has no attribute 'name'" | diff output.txt.tail -
+
+      - run:
+          name: Step 11
+          command: |
+            pipenv run pytest --cov=step11 --cov-branch --cov-fail-under=100 --cov-report html step11.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy step11.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step11.py:26: error: Item "None" of "Optional[Person]" has no attribute "name"
+            Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
+
+      - run:
+          name: Step 12
+          command: |
+            pipenv run pytest --cov=step12 --cov-branch --cov-fail-under=100 --cov-report html step12.py
+            pipenv run mypy step12.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step12 import luke, anakin
+            import json
+            print(json.dumps(luke.json))
+            print(json.dumps(anakin.json))
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}
+            {"name": "Anakin Skywalker", "mother": "Shmi Skywalker Lars", "father": "The Force", "maternal_grandmother": null}' | diff output.txt -
+
+      - run:
+          name: Step 13
+          command: |
+            pipenv run pytest --cov=step13 --cov-branch --cov-fail-under=100 --cov-report html step13.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy --strict step13.py &> output.txt || true
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo 'Found 16 errors in 1 file (checked 1 source file)' | diff output.txt.tail -
+
+      - run:
+          name: Step 14
+          command: |
+            pipenv run pytest --cov=step14 --cov-branch --cov-fail-under=100 --cov-report html step14.py
+            pipenv run mypy --strict step14.py
+
+
+      - run:
+          name: Step 15
+          command: |
+            pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
+            pipenv run mypy --strict step15.py

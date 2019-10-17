@@ -67,12 +67,16 @@ def test_json():
     assert (
         json.dumps(han.json) == '{"name": "Han Solo", "mother": null, "father": null}'
     )
+    assert (
+        json.dumps(luke.json)
+        == '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker"}'
+    )
 
 
 def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
-    assert kylo.grandparents == [padme]
+    assert kylo.grandparents == [padme, anakin]
 
 
 """ Scenario:
@@ -80,8 +84,7 @@ $ pipenv run mypy step9.py
 $ pipenv run pytest --cov=step9 --cov-branch --cov-fail-under=100 --cov-report html step9.py
 $ open htmlcov/index.html
 $ pipenv run python
->>> from step9 import luke, anakin
+>>> from step9 import luke
 >>> import json
->>> json.dumps(luke.json)
->>> TODO: remove the force then this: json.dumps(anakin.json)
+>>> print(json.dumps(luke.json))
 """
