@@ -71,9 +71,3 @@ def test_grandparents() -> None:
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
     assert kylo.grandparents == [padme, anakin]
-
-
-""" Scenario:
-$ pipenv run mypy step15.py --strict
-$ pipenv run pytest --cov=step15 --cov-branch --cov-fail-under=100 --cov-report html step15.py
-"""

@@ -48,19 +48,3 @@ def test_person():
 
 def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
-
-
-""" Scenario:
-$ pipenv run pytest --cov=step1 --cov-report html --cov-branch step1.py
-$ open htmlcov/index.html
-$ pipenv run python
->>> from step1 import kylo, han
->>> kylo.grandparents
-[Padme Amidala, Anakin Skywalker, None, None]  # <- not ideal
->>> han.grandparents
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "~/step1.py", line 16, in grandparents
-    grandparents.append(self.mother.mother)
-AttributeError: 'NoneType' object has no attribute 'mother'
-"""

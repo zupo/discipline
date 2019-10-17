@@ -2,3 +2,6 @@
 .mypy_cache/
 .venv/
 htmlcov/
+output.txt
+output.txt.head
+output.txt.tail

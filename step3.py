@@ -56,14 +56,3 @@ def test_person():
 def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
-
-
-""" Scenario:
-$ pipenv run pytest --cov=step3 --cov-branch --cov-fail-under=100 --cov-report html step3.py
-$ open htmlcov/index.html
-$ pipenv run mypy step3.py
-$ pipenv run python
->>> from step3 import kylo, han
->>> han.grandparents
->>> kylo.grandparents
-"""

@@ -69,14 +69,3 @@ def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
     assert kylo.grandparents == [padme, anakin]
-
-
-""" Scenario:
-$ pipenv run mypy step7.py
-$ pipenv run pytest --cov=step7 --cov-branch --cov-fail-under=100 --cov-report html step7.py
-$ open htmlcov/index.html
-$ pipenv run python
->>> from step7 import luke
->>> import json
->>> json.dumps(luke.json)
-"""

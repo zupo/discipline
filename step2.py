@@ -55,10 +55,3 @@ def test_person():
 
 def test_grandparents():
     assert luke.grandparents == [jobal, ruwee, shmi, force]
-
-
-""" Scenario:
-$ pipenv run pytest --cov=step2 --cov-branch --cov-fail-under=100 --cov-report html step2.py
-$ open htmlcov/index.html
-$ pipenv run mypy step2.py
-"""

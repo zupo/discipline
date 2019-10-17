@@ -86,8 +86,3 @@ def test_grandparents() -> None:
     assert luke.grandparents == [jobal, ruwee, shmi, force]
     assert han.grandparents == []
     assert kylo.grandparents == [padme, anakin]
-
-
-""" Scenario:
-$ pipenv run mypy step14.py --strict
-"""
