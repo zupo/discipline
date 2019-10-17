@@ -75,6 +75,17 @@ jobs:
             pipenv run pytest --cov=step3 --cov-branch --cov-fail-under=100 --cov-report html step3.py
             pipenv run mypy step3.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step3 import kylo, han
+            print(kylo.grandparents)
+            print(han.grandparents)
+            " | pipenv run python &> output.txt
+
+            echo "Asserting scenario output ..."
+            echo "[Padme Amidala, Anakin Skywalker, None, None]
+            []" | diff output.txt -
+
       - run:
           name: Step 4
           command: |
