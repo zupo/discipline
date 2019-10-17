@@ -180,4 +180,17 @@ jobs:
           name: Step 10
           command: |
             pipenv run pytest --cov=step10 --cov-branch --cov-fail-under=100 --cov-report html step10.py
-            pipenv run mypy step10.py
+
+            echo "Running scenario code ..."
+            echo "
+            from step10 import luke, anakin
+            import json
+            print(json.dumps(luke.json))
+            print(json.dumps(anakin.json))
+            " | pipenv run python &> output.txt || true
+            head -n 1 output.txt > output.txt.head
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}' | diff output.txt.head -
+            echo "AttributeError: 'NoneType' object has no attribute 'name'" | diff output.txt.tail -
