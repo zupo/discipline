@@ -91,6 +91,13 @@ jobs:
           command: |
             pipenv run pytest --cov=step4 --cov-branch --cov-fail-under=100 --cov-report html step4.py
 
+            echo "Running scenario code ..."
+            pipenv run mypy step4.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step4.py:27: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
+            Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
+
       - run:
           name: Step 5
           command: |
