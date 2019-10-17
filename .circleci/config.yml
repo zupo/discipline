@@ -39,10 +39,35 @@ jobs:
           command: |
             pipenv run pytest --cov=step1 --cov-branch --cov-fail-under=100 --cov-report html step1.py
 
+            echo "Running scenario code ..."
+            echo "
+            from step1 import kylo, han
+            print(kylo.grandparents)
+            print(han.grandparents)
+            " | pipenv run python &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo "[Padme Amidala, Anakin Skywalker, None, None]
+            Traceback (most recent call last):
+              File \"<stdin>\", line 4, in <module>
+              File \"/home/circleci/repo/step1.py\", line 16, in grandparents
+                grandparents.append(self.mother.mother)
+            AttributeError: 'NoneType' object has no attribute 'mother'" | diff output.txt -
+
       - run:
           name: Step 2
           command: |
             pipenv run pytest --cov=step2 --cov-branch --cov-fail-under=100 --cov-report html step2.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy step2.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step2.py:23: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            step2.py:24: error: Item "None" of "Optional[Person]" has no attribute "father"
+            step2.py:25: error: Item "None" of "Optional[Person]" has no attribute "mother"
+            step2.py:26: error: Item "None" of "Optional[Person]" has no attribute "father"
+            Found 4 errors in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 3
