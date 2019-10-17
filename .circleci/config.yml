@@ -236,3 +236,9 @@ jobs:
 
             echo "Asserting scenario output ..."
             echo 'Found 16 errors in 1 file (checked 1 source file)' | diff output.txt.tail -
+
+      - run:
+          name: Step 14
+          command: |
+            pipenv run pytest --cov=step14 --cov-branch --cov-fail-under=100 --cov-report html step14.py
+            pipenv run mypy --strict step14.py
