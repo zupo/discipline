@@ -224,3 +224,15 @@ jobs:
             echo "Asserting scenario output ..."
             echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}
             {"name": "Anakin Skywalker", "mother": "Shmi Skywalker Lars", "father": "The Force", "maternal_grandmother": null}' | diff output.txt -
+
+      - run:
+          name: Step 13
+          command: |
+            pipenv run pytest --cov=step13 --cov-branch --cov-fail-under=100 --cov-report html step13.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy --strict step13.py &> output.txt || true
+            tail -n 1 output.txt > output.txt.tail
+
+            echo "Asserting scenario output ..."
+            echo 'Found 16 errors in 1 file (checked 1 source file)' | diff output.txt.tail -
