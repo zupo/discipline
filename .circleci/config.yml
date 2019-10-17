@@ -194,3 +194,15 @@ jobs:
             echo "Asserting scenario output ..."
             echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}' | diff output.txt.head -
             echo "AttributeError: 'NoneType' object has no attribute 'name'" | diff output.txt.tail -
+
+      - run:
+          name: Step 11
+          command: |
+            pipenv run pytest --cov=step11 --cov-branch --cov-fail-under=100 --cov-report html step11.py
+
+            echo "Running scenario code ..."
+            pipenv run mypy step11.py &> output.txt || true
+
+            echo "Asserting scenario output ..."
+            echo 'step11.py:26: error: Item "None" of "Optional[Person]" has no attribute "name"
+            Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
