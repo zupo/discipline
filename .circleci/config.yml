@@ -1,67 +1,73 @@
+# yamllint disable rule:line-length
 # Python CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
+
+workflows:
+  lint_and_test:
+    jobs:
+      - lint_and_test
 
 jobs:
 
-  build:
-    working_directory: ~/repo
+  lint_and_test:
     environment:
-      PGHOST: localhost
-      PIPENV_VENV_IN_PROJECT: 1
-      PIPENV_IGNORE_VIRTUALENVS: 1
+      POETRY_VIRTUALENVS_IN_PROJECT: 1
     docker:
-      - image: circleci/python:3.7.4-node
+      - image: cimg/python:3.10.4
 
     steps:
       - checkout
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "Pipfile.lock" }}
+            - v1-dependencies-{{ checksum "poetry.lock" }}
             - v1-dependencies-
 
       - run:
           name: install dependencies
           command: |
-            sudo pip install pipenv
-            pipenv install --dev --deploy
-            touch .installed
+            curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+            poetry install
 
       - save_cache:
           paths:
             - ./.venv
-          key: v1-dependencies-{{ checksum "Pipfile.lock" }}
+          key: v1-dependencies-{{ checksum "poetry.lock" }}
+
+      - run:
+          name: Run linters
+          command: poetry run pre-commit run --hook-stage push --all-files
 
       - run:
           name: Step 1
           command: |
-            pipenv run pytest --cov-report html --cov=step1 step1.py
+            poetry run pytest --cov-report html --cov=step1 step1.py
 
             echo "Running scenario code ..."
             echo "
             from step1 import kylo, han
             print(kylo.grandparents)
             print(han.grandparents)
-            " | pipenv run python &> output.txt || true
+            " | poetry run python &> output.txt || true
 
             echo "Asserting scenario output ..."
             echo "[Padme Amidala, Anakin Skywalker, None, None]
             Traceback (most recent call last):
               File \"<stdin>\", line 4, in <module>
-              File \"/home/circleci/repo/step1.py\", line 13, in grandparents
+              File \"/home/circleci/project/step1.py\", line 13, in grandparents
                 grandparents.append(self.mother.mother)
             AttributeError: 'NoneType' object has no attribute 'mother'" | diff output.txt -
 
       - run:
           name: Step 2
           command: |
-            pipenv run pytest --cov-report html --cov=step2 step2.py
+            poetry run pytest --cov-report html --cov=step2 step2.py
 
             echo "Running scenario code ..."
-            pipenv run mypy step2.py &> output.txt || true
+            poetry run mypy step2.py &> output.txt || true
 
             echo "Asserting scenario output ..."
             echo 'step2.py:21: error: Item "None" of "Optional[Person]" has no attribute "mother"
@@ -73,15 +79,15 @@ jobs:
       - run:
           name: Step 3
           command: |
-            pipenv run pytest --cov-report html --cov=step3 step3.py
-            pipenv run mypy step3.py
+            poetry run pytest --cov-report html --cov=step3 step3.py
+            poetry run mypy step3.py
 
             echo "Running scenario code ..."
             echo "
             from step3 import kylo, han
             print(han.grandparents)
             print(kylo.grandparents)
-            " | pipenv run python &> output.txt
+            " | poetry run python &> output.txt
 
             echo "Asserting scenario output ..."
             echo "[]
@@ -90,27 +96,27 @@ jobs:
       - run:
           name: Step 4
           command: |
-            pipenv run pytest --cov-report html --cov=step4 step4.py
+            poetry run pytest --cov-report html --cov=step4 step4.py
 
             echo "Running scenario code ..."
-            pipenv run mypy step4.py &> output.txt || true
+            poetry run mypy step4.py &> output.txt || true
 
             echo "Asserting scenario output ..."
-            echo 'step4.py:26: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
+            echo 'step4.py:27: error: Incompatible return value type (got "List[Optional[Person]]", expected "List[Person]")
             Found 1 error in 1 file (checked 1 source file)' | diff output.txt -
 
       - run:
           name: Step 5
           command: |
-            pipenv run pytest --cov-report html --cov=step5 step5.py
-            pipenv run mypy step5.py
+            poetry run pytest --cov-report html --cov=step5 step5.py
+            poetry run mypy step5.py
 
             echo "Running scenario code ..."
             echo "
             from step5 import kylo, han
             print(han.grandparents)
             print(kylo.grandparents)
-            " | pipenv run python &> output.txt
+            " | poetry run python &> output.txt
 
             echo "Asserting scenario output ..."
             echo "[]
@@ -119,15 +125,15 @@ jobs:
       - run:
           name: Step 6
           command: |
-            pipenv run pytest --cov-report html --cov=step6 step6.py
-            pipenv run mypy step6.py
+            poetry run pytest --cov-report html --cov=step6 step6.py
+            poetry run mypy step6.py
 
             echo "Running scenario code ..."
             echo "
             from step6 import luke
             import json
             print(json.dumps(luke.json))
-            " | pipenv run python &> output.txt
+            " | poetry run python &> output.txt
 
             echo "Asserting scenario output ..."
             echo '{"name": "Luke Skywalker"}' | diff output.txt -
@@ -135,15 +141,15 @@ jobs:
       - run:
           name: Step 7
           command: |
-            pipenv run pytest --cov-report html --cov=step7 step7.py
-            pipenv run mypy step7.py
+            poetry run pytest --cov-report html --cov=step7 step7.py
+            poetry run mypy step7.py
 
             echo "Running scenario code ..."
             echo "
             from step7 import luke
             import json
             print(json.dumps(luke.json))
-            " | pipenv run python &> output.txt || true
+            " | poetry run python &> output.txt || true
             tail -n 1 output.txt > output.txt.tail
 
             echo "Asserting scenario output ..."
@@ -152,9 +158,9 @@ jobs:
       - run:
           name: Step 8
           command: |
-            pipenv run pytest --cov-report html --cov=step8 step8.py
+            poetry run pytest --cov-report html --cov=step8 step8.py
             echo "Running scenario code ..."
-            pipenv run mypy step8.py &> output.txt || true
+            poetry run mypy step8.py &> output.txt || true
 
             echo "Asserting scenario output ..."
             echo 'step8.py:23: error: Dict entry 1 has incompatible type "str": "Optional[Person]"; expected "str": "Optional[str]"
@@ -164,15 +170,15 @@ jobs:
       - run:
           name: Step 9
           command: |
-            pipenv run pytest --cov-report html --cov=step9 step9.py
-            pipenv run mypy step9.py
+            poetry run pytest --cov-report html --cov=step9 step9.py
+            poetry run mypy step9.py
 
             echo "Running scenario code ..."
             echo "
             from step9 import luke
             import json
             print(json.dumps(luke.json))
-            " | pipenv run python &> output.txt
+            " | poetry run python &> output.txt
 
             echo "Asserting scenario output ..."
             echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker"}' | diff output.txt -
@@ -180,7 +186,7 @@ jobs:
       - run:
           name: Step 10
           command: |
-            pipenv run pytest --cov-report html --cov=step10 step10.py
+            poetry run pytest --cov-report html --cov=step10 step10.py
 
             echo "Running scenario code ..."
             echo "
@@ -188,7 +194,7 @@ jobs:
             import json
             print(json.dumps(luke.json))
             print(json.dumps(anakin.json))
-            " | pipenv run python &> output.txt || true
+            " | poetry run python &> output.txt || true
             head -n 1 output.txt > output.txt.head
             tail -n 1 output.txt > output.txt.tail
 
@@ -199,10 +205,10 @@ jobs:
       - run:
           name: Step 11
           command: |
-            pipenv run pytest --cov-report html --cov=step11 step11.py
+            poetry run pytest --cov-report html --cov=step11 step11.py
 
             echo "Running scenario code ..."
-            pipenv run mypy step11.py &> output.txt || true
+            poetry run mypy step11.py &> output.txt || true
 
             echo "Asserting scenario output ..."
             echo 'step11.py:31: error: Item "None" of "Optional[Person]" has no attribute "name"
@@ -211,8 +217,8 @@ jobs:
       - run:
           name: Step 12
           command: |
-            pipenv run pytest --cov-report html --cov=step12 step12.py
-            pipenv run mypy step12.py
+            poetry run pytest --cov-report html --cov=step12 step12.py
+            poetry run mypy step12.py
 
             echo "Running scenario code ..."
             echo "
@@ -220,7 +226,7 @@ jobs:
             import json
             print(json.dumps(luke.json))
             print(json.dumps(anakin.json))
-            " | pipenv run python &> output.txt
+            " | poetry run python &> output.txt
 
             echo "Asserting scenario output ..."
             echo '{"name": "Luke Skywalker", "mother": "Padme Amidala", "father": "Anakin Skywalker", "maternal_grandmother": "Jobal Naberrie"}
@@ -229,10 +235,10 @@ jobs:
       - run:
           name: Step 13
           command: |
-            pipenv run pytest --cov-report html --cov=step13 step13.py
+            poetry run pytest --cov-report html --cov=step13 step13.py
 
             echo "Running scenario code ..."
-            pipenv run mypy --strict step13.py &> output.txt || true
+            poetry run mypy --strict step13.py &> output.txt || true
             tail -n 1 output.txt > output.txt.tail
 
             echo "Asserting scenario output ..."
@@ -241,16 +247,12 @@ jobs:
       - run:
           name: Step 14
           command: |
-            pipenv run pytest --cov-report html --cov=step14 step14.py
-            pipenv run mypy --strict step14.py
+            poetry run pytest --cov-report html --cov=step14 step14.py
+            poetry run mypy --strict step14.py
 
 
       - run:
           name: Step 15
           command: |
-            pipenv run pytest --cov-report html --cov=step15 step15.py
-            pipenv run mypy --strict step15.py
-
-      - run:
-          name: Run Black on all files
-          command: make format
+            poetry run pytest --cov-report html --cov=step15 step15.py
+            poetry run mypy --strict step15.py

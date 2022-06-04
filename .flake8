@@ -1,0 +1,11 @@
+[flake8]
+exclude = .git,.venv
+
+# make sure code examples fit on slides
+max-line-length = 65
+
+ignore =
+# I'm not using docstrings to keep code samples small
+    D100,D101,D102,D103,D104,D105,D106,D107,
+# keeping lines short to fit on slides
+    W503

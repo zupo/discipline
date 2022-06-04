@@ -1,9 +1,8 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from dataclasses import field
 
 import json
 import typing as t
+from dataclasses import dataclass
 
 
 @dataclass

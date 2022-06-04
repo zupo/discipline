@@ -1,6 +1,8 @@
 .coverage
+.direnv/
 .mypy_cache/
 .venv/
+__pycache__/
 htmlcov/
 output.txt
 output.txt.head
