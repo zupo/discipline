@@ -1,32 +1,22 @@
-# Based on https://github.com/niteoweb/Makefile
-.EXPORT_ALL_VARIABLES:
-PIPENV_VENV_IN_PROJECT = 1
-PIPENV_IGNORE_VIRTUALENVS = 1
+# Based on https://github.com/teamniteo/Makefile
 
 .PHONY: all
-all: .installed format tests
+all: lint tests
 
-.PHONY: install
-install:
-	@rm -f .installed  # force re-install
-	@make .installed
-
-.installed: Pipfile Pipfile.lock
-	@echo "Pipfile(.lock) is newer than .installed, (re)installing"
-	@pipenv sync --dev
-	@echo "This file is used by 'make' for keeping track of last install time. If Pipfile or Pipfile.lock are newer then this file (.installed) then all 'make *' commands that depend on '.installed' know they need to run pipenv install first." \
-		> .installed
-
-.PHONY: format
-format: .installed
-	@pipenv run black --line-length 62 step*.py
+.PHONY: lint
+lint:
+# 1. get all unstaged modified files
+# 2. get all staged modified files
+# 3. get all untracked files
+# 4. run pre-commit checks on them
+ifeq ($(all),true)
+	@pre-commit run --hook-stage push --all-files
+else
+	@{ git diff --name-only ./; git diff --name-only --staged ./;git ls-files --other --exclude-standard; } \
+			| sort | uniq \
+			| xargs pre-commit run --hook-stage push --files
+endif
 
 .PHONY: tests
 tests: .installed
-	@pipenv run pytest step*.py
-
-.PHONY: clean
-clean:
-	@if [ -d ".venv/" ]; then pipenv --rm; fi
-	@rm -rf .coverage .mypy_cache/ htmlcov/ output.txt output.txt.head output.txt.tail
-	@rm -f .installed
+	@pytest step*.py

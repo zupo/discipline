@@ -1,0 +1,52 @@
+[tool.poetry]
+name = "discipline"
+version = "1.0"
+description = "Code samples for my 'Don't rely on discipline talk'"
+authors = ["Neyts Zupan <https://twitter.com/nzupan>"]
+classifiers = [
+	"Programming Language :: Python",
+	"License :: MIT",
+]
+homepage = "http://github.com/zupo/discipline"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+
+
+[tool.poetry.dev-dependencies]
+autoflake = "*"
+black = "*"
+codespell = "*"
+coverage = "*"
+flake8 = "*"
+flake8-bugbear = "*"
+flake8-builtins = "*"
+flake8-comprehensions = "*"
+flake8-debugger = "*"
+flake8-deprecated = "*"
+flake8-docstrings = "*"
+flake8-isort = "*"
+flake8-mock = "*"
+flake8-plone-hasattr = "*"
+flake8-print = "*"
+flake8-self = "*"
+flake8-super-call = "*"
+flake8-tuple = "*"
+mypy = {version = "*", extras = ["reports"]}
+pre-commit = "*"
+pre-commit-hooks = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-randomly = "*"
+pyupgrade = "*"
+typecov = "*"
+yamllint = "*"
+
+
+# This is necessary because poetry2nix uses it in a default override:
+# https://github.com/nix-community/poetry2nix/blob/69cc39aa3b84c57eebc202b591c5876429e569a7/overrides/default.nix#L1001
+# types-typed-ast = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
